@@ -1,0 +1,34 @@
+@page "/"
+
+<PageTitle>Wafer Heatmap</PageTitle>
+
+<div style="padding: 2rem;">
+    <h2>🔬 Wafer Heatmap Tool</h2>
+    <p class="text-muted">請從左側選單選擇要查看的測項。</p>
+
+    <table class="table table-bordered" style="max-width:520px; margin-top:1.5rem;">
+        <thead class="table-dark">
+            <tr><th>分頁</th><th>測項</th><th>預設上下限</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><a href="/ir0">IR0</a></td>   <td>IR0</td>    <td>0 – 45（可切換條件）</td></tr>
+            <tr><td><a href="/vf0">VF0</a></td>   <td>VF0</td>    <td>205 – 285（可切換條件）</td></tr>
+            <tr><td><a href="/vf1">VF1</a></td>   <td>VF1</td>    <td>250 – 330（可切換條件）</td></tr>
+            <tr><td><a href="/idss2">IDSS2</a></td>  <td>IDSS2</td>  <td>-90 – 90（可自訂）</td></tr>
+            <tr><td><a href="/igss2f">IGSS2F</a></td> <td>IGSS2F</td> <td>-30 – 30（可自訂）</td></tr>
+            <tr><td><a href="/bvdss3">BVDSS3</a></td> <td>BVDSS3</td> <td>19.5 – 22.5（可自訂）</td></tr>
+            <tr><td><a href="/explorer">Explorer</a></td><td>任意欄位</td><td>自動偵測 / 可自訂</td></tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top:1rem; font-size:.85rem; color:#888;">
+        顏色說明：
+        <span style="background:rgb(0,200,0);color:#000;padding:2px 8px;border-radius:3px;">低值（綠）</span>
+        &nbsp;→&nbsp;
+        <span style="background:rgb(255,255,0);color:#000;padding:2px 8px;border-radius:3px;">中值（黃）</span>
+        &nbsp;→&nbsp;
+        <span style="background:rgb(255,0,0);color:#fff;padding:2px 8px;border-radius:3px;">高值（紅）</span>
+        &nbsp;&nbsp;
+        <span style="background:rgb(160,160,160);color:#fff;padding:2px 8px;border-radius:3px;">超出範圍 / 無資料（灰）</span>
+    </div>
+</div>

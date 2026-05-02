@@ -1,0 +1,11 @@
+D:\CS_folder\WaferHeatmapWeb\WaferHeatmapWeb\WaferHeatmapShared\bin\Debug\net10.0\WaferHeatmap.Shared.deps.json
+D:\CS_folder\WaferHeatmapWeb\WaferHeatmapWeb\WaferHeatmapShared\bin\Debug\net10.0\WaferHeatmap.Shared.dll
+D:\CS_folder\WaferHeatmapWeb\WaferHeatmapWeb\WaferHeatmapShared\bin\Debug\net10.0\WaferHeatmap.Shared.pdb
+D:\CS_folder\WaferHeatmapWeb\WaferHeatmapWeb\WaferHeatmapShared\obj\Debug\net10.0\WaferHeatmapShared.GeneratedMSBuildEditorConfig.editorconfig
+D:\CS_folder\WaferHeatmapWeb\WaferHeatmapWeb\WaferHeatmapShared\obj\Debug\net10.0\WaferHeatmapShared.AssemblyInfoInputs.cache
+D:\CS_folder\WaferHeatmapWeb\WaferHeatmapWeb\WaferHeatmapShared\obj\Debug\net10.0\WaferHeatmapShared.AssemblyInfo.cs
+D:\CS_folder\WaferHeatmapWeb\WaferHeatmapWeb\WaferHeatmapShared\obj\Debug\net10.0\WaferHeatmapShared.csproj.CoreCompileInputs.cache
+D:\CS_folder\WaferHeatmapWeb\WaferHeatmapWeb\WaferHeatmapShared\obj\Debug\net10.0\WaferHeatmap.Shared.dll
+D:\CS_folder\WaferHeatmapWeb\WaferHeatmapWeb\WaferHeatmapShared\obj\Debug\net10.0\refint\WaferHeatmap.Shared.dll
+D:\CS_folder\WaferHeatmapWeb\WaferHeatmapWeb\WaferHeatmapShared\obj\Debug\net10.0\WaferHeatmap.Shared.pdb
+D:\CS_folder\WaferHeatmapWeb\WaferHeatmapWeb\WaferHeatmapShared\obj\Debug\net10.0\ref\WaferHeatmap.Shared.dll

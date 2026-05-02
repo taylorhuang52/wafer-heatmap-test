@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="WaferHeatmapWeb/WaferHeatmapShared/WaferHeatmapShared.csproj" />
+  <Project Path="WaferHeatmapWeb/WaferHeatmapWeb.csproj" />
+</Solution>

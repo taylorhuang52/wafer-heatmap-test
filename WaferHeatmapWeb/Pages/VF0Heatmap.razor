@@ -1,0 +1,63 @@
+@page "/vf0"
+@using WaferHeatmap.Shared
+
+<PageTitle>VF0 Heatmap</PageTitle>
+
+<div class="page-toolbar">
+    <h4 class="tab-title">VF0 Heatmap</h4>
+    <CsvUploader OnLoaded="OnLoaded"/>
+
+    @if (_records.Count > 0)
+    {
+        <div class="toolbar-row">
+            <label>條件：</label>
+            <div class="radio-group">
+                @foreach (var opt in _options)
+                {
+                    <label class="radio-label">
+                        <input type="radio" name="vf0range"
+                               checked="@(_selected == opt.Label)"
+                               @onchange="@(() => Select(opt))"/>
+                        @opt.Label &nbsp;(@opt.Lo–@opt.Hi)
+                    </label>
+                }
+            </div>
+            <label>標題：</label>
+            <input class="form-control title-input" @bind="_title"/>
+            <button class="btn btn-primary btn-sm" @onclick="Render">套用</button>
+        </div>
+    }
+</div>
+
+@if (_records.Count > 0)
+{
+    <WaferCanvas Records="_records"
+                 ValueSelector="@(r => r.VF0)"
+                 Lo="@_lo" Hi="@_hi"
+                 Title="@_title"/>
+}
+
+@code {
+    List<DieRecord> _records = new();
+    string _title    = "VF0 Wafer Heatmap";
+    double _lo = 205, _hi = 285;
+    string _selected = "570mV";
+
+    record RangeOption(string Label, double Lo, double Hi);
+    readonly RangeOption[] _options =
+    {
+        new("570mV", 205, 285),
+        new("550mV", 195, 275),
+        new("530mV", 175, 255),
+        new("580mV", 225, 305),
+    };
+
+    void OnLoaded((List<DieRecord> records, string fileName) e)
+    {
+        _records = e.records;
+        _title = $"{e.fileName.Split('_')[0]} VF0 Wafer Heatmap";
+    }
+
+    void Select(RangeOption opt) { _selected = opt.Label; _lo = opt.Lo; _hi = opt.Hi; }
+    void Render() { }
+}

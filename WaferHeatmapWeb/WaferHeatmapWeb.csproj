@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>WaferHeatmapWeb</AssemblyName>
+    <RootNamespace>WaferHeatmapWeb</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- WaferHeatmapShared 資料夾在 WaferHeatmapWeb 專案資料夾內，排除避免重複編譯 -->
+    <Compile Remove="WaferHeatmapShared\**" />
+    <Content Remove="WaferHeatmapShared\**" />
+    <EmbeddedResource Remove="WaferHeatmapShared\**" />
+    <None Remove="WaferHeatmapShared\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.0"
+                      IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- WaferHeatmapShared 資料夾位於本專案資料夾內 -->
+    <ProjectReference Include="WaferHeatmapShared\WaferHeatmapShared.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      net10.0（不帶 -windows）→ 跨平台，WinForms 和 Blazor WASM 都能引用。
+      若只用於 WinForms，可改成 net10.0-windows。
+    -->
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>WaferHeatmap.Shared</AssemblyName>
+    <RootNamespace>WaferHeatmap.Shared</RootNamespace>
+  </PropertyGroup>
+
+</Project>

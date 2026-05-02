@@ -1,0 +1,132 @@
+@page "/explorer"
+@using WaferHeatmap.Shared
+@using System.Linq
+
+<PageTitle>Explorer</PageTitle>
+
+<div class="page-toolbar">
+    <h4 class="tab-title">Explorer</h4>
+    <CsvUploader OnLoaded="OnLoaded"/>
+
+    @if (_records.Count > 0)
+    {
+        <div class="toolbar-row">
+            <!-- 測項單選 -->
+            <label>測項：</label>
+            <select class="form-select col-select" @bind="_selectedCol"
+                    @bind:after="OnColumnChanged">
+                @foreach (var col in _columns)
+                {
+                    <option value="@col">@col</option>
+                }
+            </select>
+
+            <!-- 上下限 -->
+            <label>下限：</label>
+            <input class="form-control range-input" type="number" @bind="_lo" step="any"/>
+            <label>上限：</label>
+            <input class="form-control range-input" type="number" @bind="_hi" step="any"/>
+
+            <button class="btn btn-primary btn-sm" @onclick="RunExplorer">▶ 執行</button>
+        </div>
+
+        <!-- 片號複選 -->
+        <div class="toolbar-row wafer-selector">
+            <label>片號：</label>
+            <button class="btn btn-outline-secondary btn-xs" @onclick="SelectAll">全選</button>
+            <button class="btn btn-outline-secondary btn-xs" @onclick="SelectNone">全清</button>
+            <div class="wafer-checks">
+                @foreach (var wid in _allWaferIds)
+                {
+                    bool chk = _selectedWafers.Contains(wid);
+                    <label class="wafer-check-label @(chk ? "checked" : "")">
+                        <input type="checkbox" checked="@chk"
+                               @onchange="@(e => ToggleWafer(wid, (bool)e.Value!))"/>
+                        @wid
+                    </label>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<!-- 結果：多片晶圓排列 -->
+@if (_renderWafers.Count > 0)
+{
+    <div class="explorer-grid">
+        @foreach (var wid in _renderWafers)
+        {
+            var waferRecs = _records.Where(r => r.WaferId == wid).ToList();
+            <div class="explorer-cell">
+                <ExplorerCanvas Records="waferRecs"
+                                ValueSelector="@GetSelector()"
+                                Lo="@_lo" Hi="@_hi"
+                                WaferId="@wid"
+                                ColumnName="@_selectedCol"/>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    List<DieRecord> _records       = new();
+    List<string>    _columns       = new();
+    List<int>       _allWaferIds   = new();
+    HashSet<int>    _selectedWafers = new();
+    List<int>       _renderWafers  = new();   // 執行後才更新
+    string          _selectedCol   = "";
+    double          _lo = 0, _hi = 1;
+
+    void OnLoaded((List<DieRecord> records, string fileName) e)
+    {
+        _records      = e.records;
+        _columns      = CsvLoader.GetNumericColumns(_records);
+        _allWaferIds  = _records.Select(r => r.WaferId).Distinct().OrderBy(x => x).ToList();
+        _selectedWafers = new HashSet<int>(_allWaferIds);  // 預設全選
+        _renderWafers = new();
+
+        if (_columns.Count > 0)
+        {
+            _selectedCol = _columns[0];
+            AutoRange();
+        }
+    }
+
+    void OnColumnChanged()
+    {
+        AutoRange();
+    }
+
+    void AutoRange()
+    {
+        if (string.IsNullOrEmpty(_selectedCol)) return;
+        var vals = _records
+            .Select(r => r.GetExtra(_selectedCol))
+            .Where(v => v.HasValue && !double.IsNaN(v!.Value))
+            .Select(v => v!.Value)
+            .ToList();
+        if (vals.Count == 0) return;
+        _lo = Math.Round(vals.Min(), 4);
+        _hi = Math.Round(vals.Max(), 4);
+    }
+
+    void ToggleWafer(int wid, bool @checked)
+    {
+        if (@checked) _selectedWafers.Add(wid);
+        else          _selectedWafers.Remove(wid);
+    }
+
+    void SelectAll()  => _selectedWafers = new HashSet<int>(_allWaferIds);
+    void SelectNone() => _selectedWafers.Clear();
+
+    void RunExplorer()
+    {
+        _renderWafers = _allWaferIds.Where(w => _selectedWafers.Contains(w)).ToList();
+    }
+
+    Func<DieRecord, double?> GetSelector()
+    {
+        string col = _selectedCol;
+        return r => r.GetExtra(col);
+    }
+}

@@ -1,0 +1,141 @@
+@*
+    WaferCanvas.razor
+    通用晶圓 SVG 元件。
+    傳入 Records、ValueSelector、Lo/Hi，自動繪製圓形晶圓 heatmap。
+*@
+@using WaferHeatmap.Shared
+@using System.Linq
+
+@if (Records == null || Records.Count == 0)
+{
+    <p class="text-muted">尚未載入資料。</p>
+}
+else
+{
+    var grid     = BuildGrid();
+    var waferIds = Records.Select(r => r.WaferId).Distinct().OrderBy(x => x).ToList();
+    int maxWid   = waferIds.Max();
+
+    int totalSlots = maxWid;
+    int rows       = (int)Math.Ceiling(totalSlots / (double)COLS);
+    int svgW       = OUTER * 2 + COLS * WaferPx(grid) + (COLS - 1) * PAD;
+    int svgH       = OUTER * 2 + TITLE_H + rows * (LABEL_H + WaferPx(grid)) + (rows - 1) * PAD;
+
+    var byWafer = Records
+        .GroupBy(r => r.WaferId)
+        .ToDictionary(g => g.Key, g => g.ToDictionary(r => (r.X, r.Y)));
+
+    <div class="wafer-scroll-container">
+    <svg width="@svgW" height="@svgH" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- 標題 -->
+        <svg:text x="@(svgW/2)" y="@(OUTER + 18)"
+              text-anchor="middle" font-family="Arial" font-size="14"
+              font-weight="bold" fill="#000099">@Title</svg:text>
+
+        @for (int slot = 1; slot <= totalSlots; slot++)
+        {
+            int wid    = slot;
+            int col    = (slot - 1) % COLS;
+            int row    = (slot - 1) / COLS;
+            bool has   = byWafer.ContainsKey(wid);
+
+            int ox = OUTER + col * (WaferPx(grid) + PAD);
+            int oy = OUTER + TITLE_H + row * (LABEL_H + WaferPx(grid) + PAD);
+
+            int cx = ox + WaferPx(grid) / 2;
+            int cy = oy + LABEL_H + WaferPx(grid) / 2;
+            int r  = WaferPx(grid) / 2;
+
+            <!-- 片號標籤 -->
+            <svg:text x="@(ox + 2)" y="@(oy + 12)"
+                  font-family="Arial" font-size="9"
+                  fill="@(has ? "#000000" : "#aaaaaa")">#@wid</svg:text>
+
+            @if (!has)
+            {
+                <!-- 缺片：虛線圓框 -->
+                <circle cx="@cx" cy="@cy" r="@r"
+                        fill="none" stroke="#cccccc"
+                        stroke-width="1" stroke-dasharray="4,3"/>
+            }
+            else
+            {
+                <!-- 晶圓灰色背景 -->
+                <circle cx="@cx" cy="@cy" r="@r" fill="#cccccc"/>
+
+                var waferData = byWafer[wid];
+                int dieOffX   = ox + MARGIN + (WaferPx(grid) - 2 * MARGIN - grid.dieAreaW) / 2;
+                int dieOffY   = oy + LABEL_H + MARGIN + (WaferPx(grid) - 2 * MARGIN - grid.dieAreaH) / 2;
+
+                @foreach (var die in CalcDies(grid, cx, cy, r, dieOffX, dieOffY))
+                {
+                    if (!die.InCircle) continue;
+                    if (!waferData.TryGetValue((die.X, die.Y), out var rec)) continue;
+
+                    double? val  = ValueSelector(rec);
+                    string  bg   = ColorScale.GetCss(val, Lo, Hi);
+
+                    <rect x="@die.Px" y="@die.Py"
+                          width="@(CELL - 1)" height="@(CELL - 1)"
+                          fill="@bg"/>
+                }
+
+                <!-- 晶圓外框 -->
+                <circle cx="@cx" cy="@cy" r="@r"
+                        fill="none" stroke="#555555" stroke-width="1"/>
+            }
+        }
+    </svg>
+    </div>
+}
+
+@code {
+    // ── Parameters ────────────────────────────────────────────────────────────
+    [Parameter, EditorRequired] public List<DieRecord>              Records       { get; set; } = new();
+    [Parameter, EditorRequired] public Func<DieRecord, double?>     ValueSelector { get; set; } = r => null;
+    [Parameter]                 public double                        Lo            { get; set; } = 0;
+    [Parameter]                 public double                        Hi            { get; set; } = 45;
+    [Parameter]                 public string                        Title         { get; set; } = "";
+
+    // ── Layout constants ──────────────────────────────────────────────────────
+    const int COLS    = 5;
+    const int CELL    = 7;
+    const int MARGIN  = 4;
+    const int LABEL_H = 16;
+    const int PAD     = 8;
+    const int OUTER   = 30;
+    const int TITLE_H = 28;
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    record GridInfo(int xMin, int yMin, int gridW, int gridH, int dieAreaW, int dieAreaH);
+    record DieInfo(int X, int Y, int Px, int Py, bool InCircle);
+
+    GridInfo BuildGrid()
+    {
+        int xMin = Records.Min(r => r.X), xMax = Records.Max(r => r.X);
+        int yMin = Records.Min(r => r.Y), yMax = Records.Max(r => r.Y);
+        int gW   = xMax - xMin + 1, gH = yMax - yMin + 1;
+        return new GridInfo(xMin, yMin, gW, gH, gW * CELL, gH * CELL);
+    }
+
+    int WaferPx(GridInfo g) => Math.Max(g.dieAreaW, g.dieAreaH) + 2 * MARGIN;
+
+    IEnumerable<DieInfo> CalcDies(GridInfo g, int cx, int cy, int radius,
+                                  int dieOffX, int dieOffY)
+    {
+        for (int gy = 0; gy < g.gridH; gy++)
+        for (int gx = 0; gx < g.gridW; gx++)
+        {
+            int px = dieOffX + gx * CELL;
+            int py = dieOffY + gy * CELL;
+            int dx = px + CELL / 2 - cx;
+            int dy = py + CELL / 2 - cy;
+            double lim = radius - MARGIN / 2.0;
+            yield return new DieInfo(
+                g.xMin + gx, g.yMin + gy,
+                px, py,
+                dx * dx + dy * dy <= lim * lim);
+        }
+    }
+}

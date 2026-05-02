@@ -1,0 +1,47 @@
+@*
+    CsvUploader.razor
+    通用 CSV 上傳元件，上傳後回傳解析好的 DieRecord 列表。
+*@
+@using WaferHeatmap.Shared
+@using Microsoft.AspNetCore.Components.Forms
+
+<div class="csv-uploader">
+    <InputFile OnChange="OnFileChange" accept=".csv" class="form-control"/>
+    @if (!string.IsNullOrEmpty(_status))
+    {
+        <small class="@(_isError ? "text-danger" : "text-success")">@_status</small>
+    }
+</div>
+
+@code {
+    [Parameter] public EventCallback<(List<DieRecord> records, string fileName)> OnLoaded { get; set; }
+
+    string _status  = "";
+    bool   _isError = false;
+
+    async Task OnFileChange(InputFileChangeEventArgs e)
+    {
+        _status  = "讀取中…";
+        _isError = false;
+
+        try
+        {
+            var file = e.File;
+            // 最大 50 MB
+            using var stream = file.OpenReadStream(maxAllowedSize: 50 * 1024 * 1024);
+            using var reader = new System.IO.StreamReader(stream);
+            string csvText   = await reader.ReadToEndAsync();
+
+            var records = CsvLoader.LoadFromText(csvText);
+            _status = $"✔ {file.Name}（{records.Count:N0} dies，" +
+                      $"{records.Select(r => r.WaferId).Distinct().Count()} wafers）";
+
+            await OnLoaded.InvokeAsync((records, file.Name));
+        }
+        catch (Exception ex)
+        {
+            _isError = true;
+            _status  = "❌ " + ex.Message;
+        }
+    }
+}

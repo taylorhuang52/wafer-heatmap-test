@@ -1,0 +1,51 @@
+@page "/igss2f"
+@using WaferHeatmap.Shared
+
+<PageTitle>IGSS2F Heatmap</PageTitle>
+
+<div class="page-toolbar">
+    <h4 class="tab-title">IGSS2F Heatmap</h4>
+    <CsvUploader OnLoaded="OnLoaded"/>
+
+    @if (_records.Count > 0)
+    {
+        <div class="toolbar-row">
+            <label>下限：</label>
+            <input class="form-control range-input" type="number" @bind="_lo" step="1"/>
+            <label>上限：</label>
+            <input class="form-control range-input" type="number" @bind="_hi" step="1"/>
+            <label>標題：</label>
+            <input class="form-control title-input" @bind="_title"/>
+            <button class="btn btn-primary btn-sm" @onclick="Render">套用</button>
+        </div>
+
+        @if (_warn)
+        {
+            <div class="alert alert-warning py-1">此 CSV 找不到 IGSS2F 欄位，無法作圖。</div>
+        }
+    }
+</div>
+
+@if (_records.Count > 0 && !_warn)
+{
+    <WaferCanvas Records="_records"
+                 ValueSelector="@(r => r.IGSS2F)"
+                 Lo="@_lo" Hi="@_hi"
+                 Title="@_title"/>
+}
+
+@code {
+    List<DieRecord> _records = new();
+    string _title = "IGSS2F Wafer Heatmap";
+    double _lo = -30, _hi = 30;
+    bool   _warn = false;
+
+    void OnLoaded((List<DieRecord> records, string fileName) e)
+    {
+        _records = e.records;
+        _warn    = _records.All(r => r.IGSS2F == null);
+        _title   = $"{e.fileName.Split('_')[0]} IGSS2F Wafer Heatmap";
+    }
+
+    void Render() { }
+}
