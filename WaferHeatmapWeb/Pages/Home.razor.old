@@ -11,13 +11,13 @@
             <tr><th>分頁</th><th>測項</th><th>預設上下限</th></tr>
         </thead>
         <tbody>
-            <tr><td><a href="ir0">IR0</a></td>   <td>IR0</td>    <td>0 – 45（可切換條件）</td></tr>
-            <tr><td><a href="vf0">VF0</a></td>   <td>VF0</td>    <td>205 – 285（可切換條件）</td></tr>
-            <tr><td><a href="vf1">VF1</a></td>   <td>VF1</td>    <td>250 – 330（可切換條件）</td></tr>
-            <tr><td><a href="idss2">IDSS2</a></td>  <td>IDSS2</td>  <td>-90 – 90（可自訂）</td></tr>
-            <tr><td><a href="igss2f">IGSS2F</a></td> <td>IGSS2F</td> <td>-30 – 30（可自訂）</td></tr>
-            <tr><td><a href="bvdss3">BVDSS3</a></td> <td>BVDSS3</td> <td>19.5 – 22.5（可自訂）</td></tr>
-            <tr><td><a href="explorer">Explorer</a></td><td>任意欄位</td><td>自動偵測 / 可自訂</td></tr>
+            <tr><td><a href="/ir0">IR0</a></td>   <td>IR0</td>    <td>0 – 45（可切換條件）</td></tr>
+            <tr><td><a href="/vf0">VF0</a></td>   <td>VF0</td>    <td>205 – 285（可切換條件）</td></tr>
+            <tr><td><a href="/vf1">VF1</a></td>   <td>VF1</td>    <td>250 – 330（可切換條件）</td></tr>
+            <tr><td><a href="/idss2">IDSS2</a></td>  <td>IDSS2</td>  <td>-90 – 90（可自訂）</td></tr>
+            <tr><td><a href="/igss2f">IGSS2F</a></td> <td>IGSS2F</td> <td>-30 – 30（可自訂）</td></tr>
+            <tr><td><a href="/bvdss3">BVDSS3</a></td> <td>BVDSS3</td> <td>19.5 – 22.5（可自訂）</td></tr>
+            <tr><td><a href="/explorer">Explorer</a></td><td>任意欄位</td><td>自動偵測 / 可自訂</td></tr>
         </tbody>
     </table>
 
