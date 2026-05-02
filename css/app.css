@@ -1,0 +1,204 @@
+/* ── 整體佈局 ── */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.app-main {
+    flex: 1;
+    overflow-x: auto;
+    padding: 0;
+    background: #f8f9fa;
+}
+
+/* ── 側邊導覽列 ── */
+.nav-sidebar {
+    width: 170px;
+    min-width: 170px;
+    background: #1e2a3a;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.nav-brand {
+    padding: 14px 12px 10px;
+    font-size: .95rem;
+    font-weight: bold;
+    color: #fff;
+    border-bottom: 1px solid #344;
+    white-space: nowrap;
+}
+
+.nav-sidebar nav {
+    display: flex;
+    flex-direction: column;
+    padding: 6px 0;
+}
+
+.nav-sidebar nav a {
+    padding: 8px 14px;
+    color: #cdd6e0;
+    text-decoration: none;
+    font-size: .85rem;
+    border-left: 3px solid transparent;
+    transition: background .15s;
+}
+
+.nav-sidebar nav a:hover {
+    background: #2c3e52;
+    color: #fff;
+}
+
+.nav-sidebar nav a.active {
+    background: #2c3e52;
+    color: #7ecfff;
+    border-left-color: #7ecfff;
+}
+
+/* ── 頁面工具列 ── */
+.page-toolbar {
+    background: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 10px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.tab-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.toolbar-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.toolbar-row label {
+    margin: 0;
+    font-size: .85rem;
+    white-space: nowrap;
+}
+
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.radio-label {
+    font-size: .84rem;
+    cursor: pointer;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.range-input {
+    width: 90px !important;
+    font-size: .85rem;
+    padding: 3px 6px;
+    height: 28px;
+}
+
+.title-input {
+    width: 320px !important;
+    font-size: .85rem;
+    padding: 3px 6px;
+    height: 28px;
+}
+
+.col-select {
+    width: 180px !important;
+    font-size: .85rem;
+    height: 28px;
+    padding: 2px 6px;
+}
+
+/* ── 片號複選區 ── */
+.wafer-selector {
+    align-items: flex-start;
+}
+
+.wafer-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: 760px;
+}
+
+.wafer-check-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: .82rem;
+    cursor: pointer;
+    background: #f5f5f5;
+    user-select: none;
+    transition: background .1s;
+}
+
+.wafer-check-label.checked {
+    background: #d0eaff;
+    border-color: #7ab8f5;
+    color: #0060c0;
+}
+
+.wafer-check-label input {
+    margin: 0;
+}
+
+.btn-xs {
+    padding: 2px 8px;
+    font-size: .78rem;
+    height: 24px;
+    line-height: 1;
+}
+
+/* ── 晶圓圖捲動容器 ── */
+.wafer-scroll-container {
+    overflow-x: auto;
+    padding: 16px;
+}
+
+/* ── Explorer 格線排版 ── */
+.explorer-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px;
+    align-items: flex-start;
+}
+
+.explorer-cell {
+    flex: 0 0 auto;
+}
+
+/* ── CSV 上傳元件 ── */
+.csv-uploader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.csv-uploader small {
+    font-size: .82rem;
+}
+
+/* ── Bootstrap 補丁 ── */
+.form-control, .form-select {
+    display: inline-block;
+}
